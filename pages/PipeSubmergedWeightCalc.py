@@ -11,13 +11,13 @@ st.set_page_config(layout="wide")
 
 # Webpage title
 st.title("Pipe Submerged Weight Calc")
-st.write("#### This page calculates a pipelines dry and submerged weight")
+st.write("#### This page calculates a pipelines EMPTY dry and submerged weight")
 
 st.write("""***""")
 st.write(
-    """ This page calculates the dry and submmerged weight of a pipeline.  
-    Current limits takes into account only the wall thickness.  
-    Pipeline coatings will be added later.  
+    """ This page calculates the dry and submmerged weight of an pipeline.  
+    Current limits is an EMPTY pipeline.  
+    Pipeline weight due to content will be added later.  
 Send me an email if you find any errors. 
  """
 )
@@ -219,8 +219,10 @@ with col1:
         formatted_string_dryW = "{:.2f}".format(dry_weight)
         submerged_weight_formatted = float(formatted_string_subW)
         dry_weight_formatted = float(formatted_string_dryW)
-        col2.write(f"Pipeline dry weight is {dry_weight_formatted} kN/m. \n")
-        col2.write(f"Pipeline submerged weight is {submerged_weight_formatted} kN/m.")
+        col2.write(f"Pipeline EMPTY dry weight is {dry_weight_formatted} kN/m. \n")
+        col2.write(
+            f"Pipeline EMPTY submerged weight is {submerged_weight_formatted} kN/m."
+        )
 
 with col2:
     image = Image.open("Images/PipelineLayers.png")
