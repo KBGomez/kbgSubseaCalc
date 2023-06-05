@@ -9,6 +9,9 @@ from PIL import Image
 # Set page layout to wide
 st.set_page_config(layout="wide")
 
+# Set this variable to output variables for testing purposes.
+test = False
+
 # Webpage title
 st.title("Pipe Submerged Weight Calc")
 st.write("#### This page calculates a pipelines EMPTY dry and submerged weight")
@@ -72,6 +75,13 @@ def calculate_pipe_weight(
     ext1_volume = math.pi * ((ext1_ro) ** 2 - (pipe_ro) ** 2)
     ext2_volume = math.pi * ((ext2_ro) ** 2 - (ext1_ro) ** 2)
     cwc_volume = math.pi * ((cwc_ro) ** 2 - (ext2_ro) ** 2)
+    # If testing, output this
+    if test:
+        col3.write(f"Pipeline volume: {pipeline_volume}")
+        col3.write(f"CRA volume: {cra_volume}")
+        col3.write(f"Ext 1 volume: {ext1_volume}")
+        col3.write(f"Ext 2 volume: {ext2_volume}")
+        col3.write(f"Concrete volume: {cwc_volume}")
 
     # Calculate the weight of each section
     pipeline_weight = pipeline_volume * pipe_density
@@ -79,17 +89,33 @@ def calculate_pipe_weight(
     ext1_weight = ext1_volume * ext1_density
     ext2_weight = ext2_volume * ext2_density
     cwc_weight = cwc_volume * cwc_density
+    # If testing, output this
+    if test:
+        col3.write(f"Pipeline weight: {pipeline_weight}")
+        col3.write(f"CRA weight: {cra_weight}")
+        col3.write(f"Ext 1 weight: {ext1_weight}")
+        col3.write(f"Ext 2 weight: {ext2_weight}")
+        col3.write(f"Concrete weight: {cwc_weight}")
 
     # Calculate buoyancy
-    displaced_water_volume = math.pi * (cwc_ro - pipe_ri) ** 2
+    displaced_water_volume = math.pi * (pipe_ro + ext1 + ext2 + cwc) ** 2
+    # If testing, output this
+    if test:
+        col3.write(f"Buoyancy Volume: {displaced_water_volume}")
 
     # Calculate the weight of the displaced water
     displaced_water_weight = displaced_water_volume * water_density
+    # If testing, output this
+    if test:
+        col3.write(f"Buoyancy weight: {displaced_water_weight}")
 
     # Calculate the total pipeline dry weight
     total_pipeline_weight = (
         pipeline_weight + cra_weight + ext1_weight + ext2_weight + cwc_weight
     )
+    # If testing, output this
+    if test:
+        col3.write(f"Total pipeline weight: {total_pipeline_weight}")
 
     # Calculate the submerged weight of the pipeline
     submerged_weight = total_pipeline_weight - displaced_water_weight
@@ -103,7 +129,7 @@ def calculate_pipe_weight(
 
 # main program
 # lets breakdown this page to two columns
-col1, col2 = st.columns(2)
+col1, col2, col3 = st.columns(3)
 
 # User inputs
 with col1:
@@ -219,8 +245,8 @@ with col1:
         formatted_string_dryW = "{:.2f}".format(dry_weight)
         submerged_weight_formatted = float(formatted_string_subW)
         dry_weight_formatted = float(formatted_string_dryW)
-        col2.write(f"Pipeline EMPTY dry weight is {dry_weight_formatted} kN/m. \n")
-        col2.write(
+        col3.write(f"Pipeline EMPTY dry weight is {dry_weight_formatted} kN/m. \n")
+        col3.write(
             f"Pipeline EMPTY submerged weight is {submerged_weight_formatted} kN/m."
         )
 
