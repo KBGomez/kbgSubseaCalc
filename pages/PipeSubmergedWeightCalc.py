@@ -14,13 +14,12 @@ test = False
 
 # Webpage title
 st.title("Pipe Submerged Weight Calc")
-st.write("#### This page calculates a pipelines EMPTY dry and submerged weight")
+st.write("#### This page calculates a pipelines dry and submerged weight")
 
 st.write("""***""")
 st.write(
     """ This page calculates the dry and submmerged weight of an pipeline.  
-    Current limits is an EMPTY pipeline.  
-    Pipeline weight due to content will be added later.  
+  
 Send me an email if you find any errors. 
  """
 )
@@ -75,6 +74,7 @@ def calculate_pipe_weight(
     ext1_volume = math.pi * ((ext1_ro) ** 2 - (pipe_ro) ** 2)
     ext2_volume = math.pi * ((ext2_ro) ** 2 - (ext1_ro) ** 2)
     cwc_volume = math.pi * ((cwc_ro) ** 2 - (ext2_ro) ** 2)
+    content_volume = math.pi * ((pipe_ri - 2 * cra) ** 2)
     # If testing, output this
     if test:
         col3.write(f"Pipeline volume: {pipeline_volume}")
@@ -82,6 +82,7 @@ def calculate_pipe_weight(
         col3.write(f"Ext 1 volume: {ext1_volume}")
         col3.write(f"Ext 2 volume: {ext2_volume}")
         col3.write(f"Concrete volume: {cwc_volume}")
+        col3.write(f"Content volume: {content_volume}")
 
     # Calculate the weight of each section
     pipeline_weight = pipeline_volume * pipe_density
@@ -89,6 +90,7 @@ def calculate_pipe_weight(
     ext1_weight = ext1_volume * ext1_density
     ext2_weight = ext2_volume * ext2_density
     cwc_weight = cwc_volume * cwc_density
+    content_weight = content_volume * content_density
     # If testing, output this
     if test:
         col3.write(f"Pipeline weight: {pipeline_weight}")
@@ -96,6 +98,7 @@ def calculate_pipe_weight(
         col3.write(f"Ext 1 weight: {ext1_weight}")
         col3.write(f"Ext 2 weight: {ext2_weight}")
         col3.write(f"Concrete weight: {cwc_weight}")
+        col3.write(f"Content weight: {content_weight}")
 
     # Calculate buoyancy
     displaced_water_volume = math.pi * (pipe_ro + ext1 + ext2 + cwc) ** 2
@@ -111,7 +114,12 @@ def calculate_pipe_weight(
 
     # Calculate the total pipeline dry weight
     total_pipeline_weight = (
-        pipeline_weight + cra_weight + ext1_weight + ext2_weight + cwc_weight
+        pipeline_weight
+        + cra_weight
+        + ext1_weight
+        + ext2_weight
+        + cwc_weight
+        + content_weight
     )
     # If testing, output this
     if test:
